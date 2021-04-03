@@ -1,0 +1,11 @@
+*.swp
+.idea
+*.iml
+*~
+target/
+.metals
+metals.sbt
+.bsp
+null/
+.bloop
+.vscode
