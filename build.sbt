@@ -3,10 +3,10 @@ organization := "com.scalawilliam"
 name := "letsencrypt-scala"
 
 /** Versions */
-version := "0.0.2-SNAPSHOT"
+version := "0.0.3-SNAPSHOT"
 versionScheme := Some("semver-spec")
 scalaVersion := "2.13.5"
-crossScalaVersions := Seq("2.13.5", "3.0.0-RC2")
+crossScalaVersions := Seq("2.13.5", "3.0.0-RC1", "3.0.0-RC2")
 scalacOptions := Nil
 
 /** Publishing: currently to Sonatype snapshots */
@@ -20,10 +20,13 @@ publishTo := {
 
 /** Dependencies */
 libraryDependencies ++= Seq(
-  "org.scalatest" %% "scalatest" % "3.2.7" % Test, {
-    val sv = scalaVersion.value
-    "org.typelevel" %% "cats-effect" % (if (sv.startsWith("3"))
-                                          "3.0.1"
+  {
+    val sv         = scalaVersion.value
+    val scalaTestV = if (sv == "3.0.0-RC1") "3.2.6" else "3.2.7"
+    "org.scalatest" %% "scalatest" % scalaTestV % Test
+  }, {
+    val myName = name.value
+    "org.typelevel" %% "cats-effect" % (if (myName.endsWith("ce3")) "3.0.1"
                                         else "2.4.1")
   },
   "org.bouncycastle" % "bcprov-jdk16" % "1.46"
