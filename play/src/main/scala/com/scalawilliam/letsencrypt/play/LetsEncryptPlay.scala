@@ -3,14 +3,13 @@ package com.scalawilliam.letsencrypt.play
 import cats.effect.IO
 import com.scalawilliam.letsencrypt.LetsEncryptScala
 import play.api.inject.ApplicationLifecycle
+import play.core.ApplicationProvider
 
 import javax.inject.Inject
 import javax.net.ssl._
-
 import play.server.api._
 
-final class LetsEncryptPlay @Inject()(
-    applicationLifecycle: ApplicationLifecycle)
+final class LetsEncryptPlay @Inject()(applicationProvider: ApplicationProvider)
     extends SSLEngineProvider {
 
   override def createSSLEngine(): SSLEngine = sslContext().createSSLEngine
@@ -22,7 +21,9 @@ final class LetsEncryptPlay @Inject()(
       .allocated
       .unsafeRunSync() match {
       case (sslContext, close) =>
-        applicationLifecycle.addStopHook(() => close.unsafeToFuture())
+        applicationProvider.get.get.injector
+          .instanceOf[ApplicationLifecycle]
+          .addStopHook(() => close.unsafeToFuture())
         sslContext
     }
 
