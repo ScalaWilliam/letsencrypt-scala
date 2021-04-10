@@ -8,8 +8,9 @@ import play.api.mvc.{
   ControllerComponents
 }
 
-final class IndexController @Inject()(cc: ControllerComponents)
-    extends AbstractController(cc) {
+final class IndexController @Inject()(
+    controllerComponents: ControllerComponents)
+    extends AbstractController(controllerComponents) {
   def index: Action[AnyContent] = Action {
     Ok("Welcome to secure Play!")
   }
