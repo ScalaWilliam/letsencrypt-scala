@@ -46,3 +46,14 @@ developers := List(
     url("https://www.scalawilliam.com")
   )
 )
+
+lazy val root = ProjectRef(file("."), "letsencrypt-scala")
+
+lazy val play = project
+  .dependsOn(root)
+  .settings(
+    scalaVersion := "2.13.5",
+    libraryDependencies ++= Seq(
+      "com.typesafe.play" %% "play-server" % "2.8.8",
+      "org.scalatest"     %% "scalatest"   % "3.2.7" % Test)
+  )
