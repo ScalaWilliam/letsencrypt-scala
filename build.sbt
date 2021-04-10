@@ -1,16 +1,16 @@
 /** Names */
-organization := "com.scalawilliam"
+organization in ThisBuild := "com.scalawilliam"
 name := "letsencrypt-scala"
 
 /** Versions */
-version := "0.0.3-SNAPSHOT"
-versionScheme := Some("semver-spec")
-scalaVersion := "2.13.5"
+version in ThisBuild := "0.0.3-SNAPSHOT"
+versionScheme in ThisBuild := Some("semver-spec")
+scalaVersion in ThisBuild := "2.13.5"
 crossScalaVersions := Seq("2.13.5", "3.0.0-RC1", "3.0.0-RC2")
-scalacOptions := Nil
+scalacOptions in ThisBuild := Nil
 
 /** Publishing: currently to Sonatype snapshots */
-publishTo := {
+publishTo in ThisBuild := {
   val nexus = "https://oss.sonatype.org/"
 //  if (isSnapshot.value)
   Some("snapshots" at nexus + "content/repositories/snapshots")
@@ -52,8 +52,8 @@ lazy val root = ProjectRef(file("."), "letsencrypt-scala")
 lazy val play = project
   .dependsOn(root)
   .settings(
+    name := "letsencrypt-play",
     scalaVersion := "2.13.5",
-    libraryDependencies ++= Seq(
-      "com.typesafe.play" %% "play-server" % "2.8.8",
-      "org.scalatest"     %% "scalatest"   % "3.2.7" % Test)
+    libraryDependencies ++= Seq("com.typesafe.play" %% "play-server" % "2.8.8",
+                                "org.scalatest"     %% "scalatest"   % "3.2.7" % Test)
   )
