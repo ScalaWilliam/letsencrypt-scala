@@ -18,7 +18,7 @@ credentials += Credentials(Path.userHome / ".sbt" / "sonatype_credentials")
 EOF
 
 $ export GPG_TTY=$(tty)
-$ sbt ++test +publishSigned
+$ sbt ++test +publish
 ```
 
 Then in https://oss.sonatype.org/ log in, go to 'Staging Repositories', sort by date descending, select the latest package, click 'Close' and then 'Release'.
