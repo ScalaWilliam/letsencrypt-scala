@@ -100,3 +100,6 @@ Global / onChangedBuildSource := ReloadOnSourceChanges
 lazy val `examples-fs2-echo` = project.in(file("examples/fs2-echo"))
 lazy val `examples-http4s`   = project.in(file("examples/http4s"))
 lazy val `examples-play`     = project.in(file("examples/play"))
+
+ThisBuild / javacOptions ++= Seq("-source", "1.8", "-target", "1.8")
+ThisBuild / scalacOptions += "-target:jvm-1.8"
