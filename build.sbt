@@ -1,4 +1,3 @@
-/** Names */
 name := "letsencrypt-scala-root"
 
 ThisBuild / organization := "com.scalawilliam"
@@ -9,6 +8,8 @@ ThisBuild / publishTo := {
     Some("snapshots" at nexus + "content/repositories/snapshots")
   else Some("releases" at nexus + "service/local/staging/deploy/maven2")
 }
+
+ThisBuild / publish / skip := true
 
 ThisBuild / version := "0.0.5-SNAPSHOT"
 
@@ -49,13 +50,14 @@ lazy val root = project
   .aggregate(ce3)
   .aggregate(`play-ce2`)
   .aggregate(`play-ce3`)
-
-publish / skip := true
+  .aggregate(`examples-fs2-echo`)
+  .aggregate(`examples-http4s`)
+  .aggregate(`examples-play`)
 
 lazy val `play-ce2` = project
   .settings(
+    publish / skip := false,
     crossScalaVersions := Seq("2.12.12", "2.13.6"),
-    publish / skip := true,
     name := "letsencrypt-play-ce2",
     scalaVersion := "2.13.6",
     libraryDependencies += "com.typesafe.play" %% "play" % "2.8.8"
@@ -64,36 +66,37 @@ lazy val `play-ce2` = project
 
 lazy val `play-ce3` = project
   .settings(
+    publish / skip := false,
     crossScalaVersions := Seq("2.12.12", "2.13.6"),
-    publish / skip := true,
-    name := "letsencrypt-play-ce3",
+    name := "letsencrypt-play",
     scalaVersion := "2.13.6",
     libraryDependencies += "com.typesafe.play" %% "play" % "2.8.8"
   )
   .dependsOn(ce3)
 
-lazy val `play-example` = project
-  .dependsOn(`play-ce3`)
-  .enablePlugins(PlayScala)
-  .settings(publish / skip := true, libraryDependencies += guice)
-
 lazy val ce2 =
   project
     .settings(
+      publish / skip := false,
       crossScalaVersions := Seq("2.12.12", "2.13.6", "3.0.1"),
-      name := "letsencrypt-ce2",
+      name := "letsencrypt-scala-ce2",
       libraryDependencies += "org.typelevel"    %% "cats-effect" % "2.5.1",
-      libraryDependencies += "org.bouncycastle" % "bcprov-jdk16" % "1.46"
+      libraryDependencies += "org.bouncycastle" % "bcprov-jdk16" % "1.46",
+      Compile / scalaSource := (ce3 / Compile / scalaSource).value
     )
 
 lazy val ce3 =
   project
     .settings(
+      publish / skip := false,
       crossScalaVersions := Seq("2.12.12", "2.13.6", "3.0.1"),
-      Compile / scalaSource := (ce2 / Compile / scalaSource).value,
-      name := "letsencrypt-ce3",
+      name := "letsencrypt-scala",
       libraryDependencies += "org.typelevel"    %% "cats-effect" % "3.2.0",
       libraryDependencies += "org.bouncycastle" % "bcprov-jdk16" % "1.46"
     )
 
 Global / onChangedBuildSource := ReloadOnSourceChanges
+
+lazy val `examples-fs2-echo` = project.in(file("examples/fs2-echo"))
+lazy val `examples-http4s`   = project.in(file("examples/http4s"))
+lazy val `examples-play`     = project.in(file("examples/play"))

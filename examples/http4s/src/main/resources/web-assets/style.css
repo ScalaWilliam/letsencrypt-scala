@@ -1,0 +1,17 @@
+body {
+    max-width: 30em;
+    font-family: -apple-system, "Segoe UI", "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    line-height: 1.62;
+    cursor: default;
+}
+
+h1 {
+    font-size: 3em;
+}
+
+h1 img {
+    max-height: 1em;
+    display: inline;
+    max-width: 3em;
+    transform: scale(1.3);
+}
