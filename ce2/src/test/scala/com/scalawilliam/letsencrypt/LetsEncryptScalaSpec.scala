@@ -16,8 +16,8 @@
 
 package com.scalawilliam.letsencrypt
 
-import cats.effect.IO
-import cats.implicits.toTraverseOps
+import cats.effect._
+import cats.implicits._
 import com.scalawilliam.letsencrypt.LetsEncryptScala.DefaultEnvVarName
 import com.scalawilliam.letsencrypt.LetsEncryptScalaUtils.{
   extractDER,
@@ -101,9 +101,8 @@ final class LetsEncryptScalaSpec extends AnyFreeSpec {
 
   "A random password can be generated and is cleared afterwards" in {
     val resultingArrays = List
-      .fill(100)(randomPassword[IO])
+      .fill(100)(randomPassword[IO].use(lac => IO.pure(lac)))
       .sequence
-      .use(lac => IO.pure(lac))
       .unsafeRunSync()
     assert(resultingArrays.flatten.toSet == Set('0'))
   }

@@ -16,8 +16,7 @@
 
 package com.scalawilliam.letsencrypt
 
-import cats.effect.{Async, Resource, Sync}
-import cats.implicits._
+import cats.effect._
 import com.scalawilliam.letsencrypt.LetsEncryptScala.{
   CertificateAliasPrefix,
   PrivateKeyAlias
@@ -64,9 +63,10 @@ object LetsEncryptScala {
     */
   def fromLetsEncryptDirectory[F[_]: Sync](
       certificateDirectory: Path): Resource[F, LetsEncryptScala] =
-    (loadCertificateChain(certificateDirectory),
-     loadPrivateKey(certificateDirectory))
-      .mapN(new LetsEncryptScala(_, _))
+    for {
+      chain      <- loadCertificateChain(certificateDirectory)
+      privateKey <- loadPrivateKey(certificateDirectory)
+    } yield new LetsEncryptScala(chain, privateKey)
 
   /** Load the certificate configuration from a directory specified as
     * an environment variable or as a system property.

@@ -16,8 +16,6 @@ ThisBuild / versionScheme := Some("semver-spec")
 
 ThisBuild / scalaVersion := "2.13.6"
 
-ThisProject / crossScalaVersions := Seq("2.12.12", "2.13.6", "3.0.1")
-
 ThisBuild / scalacOptions := Nil
 
 ThisBuild / homepage := Some(
@@ -56,6 +54,7 @@ publish / skip := true
 
 lazy val `play-ce2` = project
   .settings(
+    crossScalaVersions := Seq("2.12.12", "2.13.6"),
     publish / skip := true,
     name := "letsencrypt-play-ce2",
     scalaVersion := "2.13.6",
@@ -65,6 +64,7 @@ lazy val `play-ce2` = project
 
 lazy val `play-ce3` = project
   .settings(
+    crossScalaVersions := Seq("2.12.12", "2.13.6"),
     publish / skip := true,
     name := "letsencrypt-play-ce3",
     scalaVersion := "2.13.6",
@@ -80,13 +80,16 @@ lazy val `play-example` = project
 lazy val ce2 =
   project
     .settings(
+      crossScalaVersions := Seq("2.12.12", "2.13.6", "3.0.1"),
       name := "letsencrypt-ce2",
       libraryDependencies += "org.typelevel"    %% "cats-effect" % "2.5.1",
-      libraryDependencies += "org.bouncycastle" % "bcprov-jdk16" % "1.46")
+      libraryDependencies += "org.bouncycastle" % "bcprov-jdk16" % "1.46"
+    )
 
 lazy val ce3 =
   project
     .settings(
+      crossScalaVersions := Seq("2.12.12", "2.13.6", "3.0.1"),
       Compile / scalaSource := (ce2 / Compile / scalaSource).value,
       name := "letsencrypt-ce3",
       libraryDependencies += "org.typelevel"    %% "cats-effect" % "3.2.0",

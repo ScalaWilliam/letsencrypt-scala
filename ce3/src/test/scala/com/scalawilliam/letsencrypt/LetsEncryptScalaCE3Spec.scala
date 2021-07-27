@@ -23,13 +23,14 @@ import com.scalawilliam.letsencrypt.LetsEncryptScalaUtils.{
   extractDER,
   randomPassword
 }
+import cats.effect.unsafe.implicits.global
 import org.scalatest.freespec.AnyFreeSpec
 
 import java.io.StringReader
 import java.security.KeyStore
 import java.util.Base64
 
-final class LetsEncryptScalaSpec extends AnyFreeSpec {
+final class LetsEncryptScalaCE3Spec extends AnyFreeSpec {
 
   private def testKeyStoreName: String = "KeyStore is populated correctly"
 
@@ -54,56 +55,10 @@ final class LetsEncryptScalaSpec extends AnyFreeSpec {
     testKeyStoreName ignore {}
   }
 
-  "Bad DER cannot be parsed" in {
-    assert(extractDER(new StringReader("ABC")).isEmpty)
-  }
-
-  "Realer DER can be parsed" in {
-    val strA                    = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-    val encodedStr              = new String(Base64.getEncoder.encode(strA.getBytes()))
-    val (firstPart, secondPart) = encodedStr.splitAt(10)
-    val inputLines = List(
-      "-----BEGIN C-----",
-      s" $firstPart   ",
-      s" $secondPart",
-      "-----END C-----",
-    ).mkString("\n")
-
-    val DER     = extractDER(new StringReader(inputLines))
-    val DER_STR = DER.map(ab => new String(ab))
-
-    assert(DER_STR.contains(s"$strA"))
-  }
-
-  "Multiple DER can be parsed" in {
-    val strA                    = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-    val strB                    = "AXBCDEFGEHIJKELMNOEPQRSETUVWXYZ"
-    val encodedStr              = new String(Base64.getEncoder.encode(strA.getBytes()))
-    val encodedStr2             = new String(Base64.getEncoder.encode(strB.getBytes()))
-    val (firstPart, secondPart) = encodedStr.splitAt(10)
-    val (thirdPart, fourthPath) = encodedStr2.splitAt(10)
-    val inputLines = List(
-      "-----BEGIN C-----",
-      s" $firstPart   ",
-      s" $secondPart",
-      "-----END C-----",
-      "-----BEGIN D-----",
-      s" $thirdPart   ",
-      s" $fourthPath",
-      "-----END D-----",
-    ).mkString("\n")
-
-    val DER     = extractDER(new StringReader(inputLines))
-    val DER_STR = DER.map(ab => new String(ab))
-
-    assert(DER_STR.contains(s"$strA") && DER_STR.contains(s"$strB"))
-  }
-
   "A random password can be generated and is cleared afterwards" in {
     val resultingArrays = List
-      .fill(100)(randomPassword[IO])
+      .fill(100)(randomPassword[IO].use(lac => IO.pure(lac)))
       .sequence
-      .use(lac => IO.pure(lac))
       .unsafeRunSync()
     assert(resultingArrays.flatten.toSet == Set('0'))
   }
