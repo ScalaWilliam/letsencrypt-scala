@@ -11,7 +11,7 @@ ThisBuild / publishTo := {
 
 ThisBuild / publish / skip := true
 
-ThisBuild / version := "0.0.5-SNAPSHOT"
+ThisBuild / version := "0.0.6-SNAPSHOT"
 
 ThisBuild / versionScheme := Some("semver-spec")
 
